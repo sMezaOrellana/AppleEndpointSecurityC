@@ -71,10 +71,11 @@ We do this by using the `es_new_client`. This functione expects an `es_client_t`
 A Block is "a non-standard extension added by Apple Inc. to Clang's implementations of the C, C++, and Objective-C programming languages that uses a lambda expression-like syntax to create closures within these languages."
 
 The block is the piece of code that will execute whenever our client recieves a new message from the EndpointSecurity subsystem. 
-A message is a top level datatype that encodes information sent from the ES subsystem to its clients. 
+A message is a top level datatype that encodes information sent from the ES subsystem to its clients.
+
 Each security event being processed by the ES subsystem will be encoded in an es_message_t.  
 A message can be an authorization request or a notification of an event that has already taken place.
-In the case of authorization requests we need to respond to them within a set amount of time.
+In the case of authorization requests we need to respond to the event within a set amount of time.
 ```c
 es_client_t *g_client;
 es_new_client_result_t endpoint_security = es_new_client(&g_client, ^(es_client_t *c, const es_message_t *msg ) {
@@ -91,6 +92,7 @@ Our handling code checks if the path of the file a process is trying to open is 
   printf("Event: %d, Process %s, used the OPEN system call and tried to open file %s\n", msg->event_type, msg->process->executable->path.data, path); 
   
   if(strncmp(path, "/etc/passwd", path_size) == 0 ) {
+    // responding to ES_EVENT_TYPE_AUTH_OPEN event
     res = es_respond_flags_result(c, msg, 0, true);
   } else {
     // documentation specifies we need to response with UINT32_MAX to allow the event 
