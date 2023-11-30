@@ -2,8 +2,8 @@
 
 ## Introduction
 This repository contains a simple C program that demonstrates the usage of Apple's Endpoint Security framework.
-The code sets up an Endpoint Security (ES) client, subscribes to a specific event type (in this case, `ES_EVENT_TYPE_AUTH_OPEN`), and responds to the events by blocking a process if it tries to open the /etc/passwords file.
-`ES_EVENT_TYPE_AUTH_OPEN` the documentation specifies this event as follows "An identifier for a process that requests permission from the operating system to open a file."
+The code sets up an Endpoint Security (ES) client, subscribes to a specific event type (in this case, `ES_EVENT_TYPE_AUTH_OPEN`), and responds to the events by blocking a process if it tries to open the `/etc/passwords` file.
+`ES_EVENT_TYPE_AUTH_OPEN` the documentation specifies this event as follows: An identifier for a process that requests permission from the operating system to open a file.
 This example serves as an educational resource for understanding how Endpoint Security works on macOS.
 
 ## Prerequisites
@@ -14,7 +14,7 @@ Furthermore, if you want to test this example you need to have SIP disabled. You
 1. Clone the repository to your local machine:
 
     ```bash
-    git clone <repository_url>
+    git clone git@github.com:sMezaOrellana/AppleEndpointSecurityC.git
     ```
 
 2. Navigate to the project directory:
@@ -32,7 +32,7 @@ Furthermore, if you want to test this example you need to have SIP disabled. You
 4. Run the executable:
 
     ```bash
-    ./edrmacos
+    sudo ./edrmacos
     ```
 
 ## Understanding the Code
@@ -82,7 +82,6 @@ es_new_client_result_t endpoint_security = es_new_client(&g_client, ^(es_client_
 });
 ```
 Our handling code checks if the path of the file a process is trying to open is `/etc/passwd` if this is the case it blocks the authorization request.
-Else we allow any the opening of a file.
 ```c
 ^(es_client_t *c, const es_message_t *msg ) {
   const char* path = msg->event.open.file->path.data;
